@@ -15,7 +15,18 @@ experience.
   various debug visualisation options. Including:
   - Wireframe mode.
   - Collision shapes.
-  
+
+# Videos
+- [Debug Camera](https://github.com/user-attachments/assets/f12c95ea-f2d3-4be7-9970-6fe75daf7cb1)
+- [In-game object picker](https://github.com/user-attachments/assets/a8e93e24-1b6d-448d-9d0f-3bbd2681373b)
+- [Editor selections synced with game](https://github.com/user-attachments/assets/0031e737-6515-41ff-a1bf-bb29978ddf58)
+- [Runtime debug visualisations](https://github.com/user-attachments/assets/9fc375f9-9dd6-41f2-86d1-bbe80d44bcf0)
+
+# Installation and Usage
+- Download from the Godot Asset Library.
+- Import the plugin into your Godot project.
+- Enable the plugin in your project settings.
+- When your game is running, click on the RDT button in the toolbar.
  
 # Notes
 - In-game object uses physics meshes and rendered MeshInstances. This has the
