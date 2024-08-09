@@ -4,6 +4,8 @@ class_name RuntimeDebugToolsEditorDebuggerPlugin
 var found = false
 var node_path = ""
 
+enum DebugMode { None=0, Debug2D, Debug3D }
+
 func selection_changed():
     var node = EditorInterface.get_inspector().get_edited_object()
     if node == null:
@@ -18,10 +20,13 @@ func selection_changed():
         if session.is_active():
             session.send_message("remote_inspector:editor_select", [node_id])
     
-func set_debugging(on: bool):
+func set_debugging(mode : DebugMode):
+    var is_active : bool = mode != DebugMode.None
+    var is_3d : bool = mode == DebugMode.Debug3D
+    
     for session in get_sessions():
         if session.is_active():
-            session.send_message("remote_inspector:debug_enable", [on])
+            session.send_message("remote_inspector:debug_enable", [is_active, is_3d])
     
 func set_render_mode(mode):
     for session in get_sessions():

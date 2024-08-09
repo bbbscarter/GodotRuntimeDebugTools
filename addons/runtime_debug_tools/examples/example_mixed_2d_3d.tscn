@@ -1,0 +1,161 @@
+[gd_scene load_steps=7 format=3 uid="uid://rv05q0begimh"]
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_ds8tl"]
+specular_color = Color(0.41024, 0.41024, 0.41024, 1)
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_dpd02"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_64r3i"]
+frequency = 0.0001
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_s5rg5"]
+width = 32
+height = 32
+noise = SubResource("FastNoiseLite_64r3i")
+
+[sub_resource type="BoxMesh" id="BoxMesh_os2bg"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_1x3lo"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0.0705882, 1, 1, 1)
+position = Vector2(188, 211)
+scale = Vector2(147, 94.4707)
+texture = SubResource("CanvasTexture_ds8tl")
+
+[node name="Sprite2D2" type="Sprite2D" parent="."]
+position = Vector2(320.868, 182.905)
+rotation = -0.876155
+scale = Vector2(147.009, 169.957)
+texture = SubResource("CanvasTexture_dpd02")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="BoxContainer" type="BoxContainer" parent="Control"]
+layout_mode = 1
+offset_left = 450.0
+offset_top = 1.0
+offset_right = 560.0
+offset_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="Control/BoxContainer"]
+layout_mode = 2
+text = "--- Z-Index 0 ---"
+
+[node name="Button" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 439.0
+offset_top = 89.0
+offset_right = 514.0
+offset_bottom = 120.0
+text = "Back"
+
+[node name="Button2" type="Button" parent="Control"]
+z_index = 1
+layout_mode = 0
+offset_left = 494.0
+offset_top = 89.0
+offset_right = 573.0
+offset_bottom = 120.0
+text = "Front"
+
+[node name="Button3" type="Button" parent="Control"]
+layout_mode = 0
+offset_left = 548.0
+offset_top = 88.0
+offset_right = 627.0
+offset_bottom = 119.0
+text = "Back"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 139.16
+offset_bottom = 125.87
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="BoxContainer" type="BoxContainer" parent="Control/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+vertical = true
+
+[node name="Label" type="Label" parent="Control/ScrollContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Label"
+
+[node name="Label2" type="Label" parent="Control/ScrollContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Label"
+
+[node name="Label3" type="Label" parent="Control/ScrollContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Label"
+
+[node name="Label4" type="Label" parent="Control/ScrollContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Label"
+
+[node name="Label5" type="Label" parent="Control/ScrollContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Label"
+
+[node name="Label6" type="Label" parent="Control/ScrollContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Label"
+
+[node name="Label7" type="Label" parent="Control/ScrollContainer/BoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Label"
+
+[node name="Camera2D" type="Camera2D" parent="."]
+anchor_mode = 0
+
+[node name="Sprite2D3" type="Sprite2D" parent="."]
+position = Vector2(273, 304)
+scale = Vector2(3.46875, 3.625)
+texture = SubResource("NoiseTexture2D_s5rg5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.882036, 0.471181, 0, -0.471181, 0.882036, 0, 0, 0, 1, 0, 0, 0)
+mesh = SubResource("BoxMesh_os2bg")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(0.980656, 0, 0.195741, 0, 1, 0, -0.195741, 0, 0.980656, 1.09362, 0.487135, 5.76572)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.378004, 0.036597, 0)
+mesh = SubResource("SphereMesh_1x3lo")
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.12641, 0, 0)
+
+[node name="MeshInstance3D3" type="MeshInstance3D" parent="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.70102, 0.036597, 0)
+mesh = SubResource("SphereMesh_1x3lo")
+skeleton = NodePath("../..")

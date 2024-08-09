@@ -1,6 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://c6bkea7amdoay"]
+[gd_scene load_steps=8 format=3 uid="uid://c6bkea7amdoay"]
 
 [ext_resource type="Script" path="res://addons/runtime_debug_tools/scripts/debugger_runtime.gd" id="1_mjb85"]
+[ext_resource type="Script" path="res://addons/runtime_debug_tools/scripts/debug_runtime_interaction_2d.gd" id="2_2iser"]
+[ext_resource type="Script" path="res://addons/runtime_debug_tools/scripts/debug_runtime_interaction_3d.gd" id="3_gj84u"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ndhe8"]
 no_depth_test = true
@@ -24,33 +26,72 @@ no_depth_test = true
 shading_mode = 0
 albedo_color = Color(0, 0, 1, 1)
 
-[node name="RemoteInspector" type="Node3D"]
+[node name="RemoteInspector" type="Node"]
 process_mode = 3
 script = ExtResource("1_mjb85")
 
-[node name="DebugLabel" type="Label" parent="."]
-offset_right = 98.0
-offset_bottom = 23.0
+[node name="DebugUI" type="CanvasLayer" parent="."]
+
+[node name="DebugLabel" type="Label" parent="DebugUI"]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -98.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
 text = "Debug Mode"
 
-[node name="DebugCamera3D" type="Camera3D" parent="."]
+[node name="Interaction2D" type="Node" parent="."]
+script = ExtResource("2_2iser")
 
-[node name="Gizmo" type="Node3D" parent="."]
+[node name="DebugCamera2D" type="Camera2D" parent="Interaction2D"]
+visible = false
 
-[node name="Y" type="MeshInstance3D" parent="Gizmo"]
+[node name="Gizmo2D" type="Node2D" parent="Interaction2D"]
+z_index = 4096
+position = Vector2(2.08165e-12, 2.08165e-12)
+scale = Vector2(5, 5)
+
+[node name="Line2D" type="Line2D" parent="Interaction2D/Gizmo2D"]
+position = Vector2(2.08165e-12, 2.08165e-12)
+points = PackedVector2Array(2.08165e-12, 2.08165e-12, 10, 2.08165e-12)
+closed = true
+width = 1.0
+default_color = Color(1, 0, 0, 1)
+
+[node name="Line2D2" type="Line2D" parent="Interaction2D/Gizmo2D"]
+position = Vector2(2.08165e-12, 2.08165e-12)
+points = PackedVector2Array(2.08165e-12, 2.08165e-12, 2.08165e-12, 10)
+closed = true
+width = 1.0
+default_color = Color(0, 1, 0, 1)
+
+[node name="Interaction3D" type="Node" parent="."]
+script = ExtResource("3_gj84u")
+
+[node name="DebugCamera3D" type="Camera3D" parent="Interaction3D"]
+visible = false
+
+[node name="Gizmo3D" type="Node3D" parent="Interaction3D"]
+visible = false
+
+[node name="Y" type="MeshInstance3D" parent="Interaction3D/Gizmo3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.08165e-12, 0.25, 2.08165e-12)
 material_override = SubResource("StandardMaterial3D_ndhe8")
 mesh = SubResource("CylinderMesh_nh1ut")
-skeleton = NodePath("../..")
+skeleton = NodePath("../../..")
 
-[node name="X" type="MeshInstance3D" parent="Gizmo"]
+[node name="X" type="MeshInstance3D" parent="Interaction3D/Gizmo3D"]
 transform = Transform3D(-4.37114e-08, -1, 3.48787e-16, 1, -4.37114e-08, -3.48787e-16, 3.48787e-16, 3.48787e-16, 1, 0.25, 2.08165e-12, 2.08165e-12)
 material_override = SubResource("StandardMaterial3D_mwqwm")
 mesh = SubResource("CylinderMesh_nh1ut")
-skeleton = NodePath("../..")
+skeleton = NodePath("../../..")
 
-[node name="Z" type="MeshInstance3D" parent="Gizmo"]
+[node name="Z" type="MeshInstance3D" parent="Interaction3D/Gizmo3D"]
 transform = Transform3D(1, 0, -1.5246e-23, -1.5246e-23, -4.37114e-08, -1, 0, 1, -4.37114e-08, 2.08165e-12, 2.08165e-12, 0.25)
 material_override = SubResource("StandardMaterial3D_fhdvt")
 mesh = SubResource("CylinderMesh_nh1ut")
-skeleton = NodePath("../..")
+skeleton = NodePath("../../..")

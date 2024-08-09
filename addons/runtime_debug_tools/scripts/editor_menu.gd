@@ -5,7 +5,8 @@ var _scene_running := false
 @onready var _inspector 
 
 enum PopupItems {
-    Debug=1,
+    Debug2D=1,
+    Debug3D,
     ShowCollisions,
     RenderNormal,
     RenderWireframe,
@@ -17,8 +18,9 @@ func _enter_tree():
     var popup := get_popup()
     popup.clear()
     popup.id_pressed.connect(_on_popup_item_pressed)
-    popup.add_check_item("Debugging", PopupItems.Debug)
-
+    popup.add_check_item("2D Debugging", PopupItems.Debug2D)
+    popup.add_check_item("3D Debugging", PopupItems.Debug3D)
+    
     popup.add_separator("Options")
     popup.add_check_item("Show Collisions", PopupItems.ShowCollisions)
     popup.add_separator("Rendering")
@@ -32,10 +34,26 @@ func _on_popup_item_pressed(id):
     var popup := get_popup()
 
     match id:
-        PopupItems.Debug:
+        PopupItems.Debug2D:
             var on = not popup.is_item_checked(idx)
+            popup.set_item_checked(popup.get_item_index(PopupItems.Debug3D), false)
             popup.set_item_checked(idx, on)
-            _inspector.set_debugging(on)
+            var mode = RuntimeDebugToolsEditorDebuggerPlugin.DebugMode.None
+            
+            if on:
+                mode = RuntimeDebugToolsEditorDebuggerPlugin.DebugMode.Debug2D
+            _inspector.set_debugging(mode)
+            
+        PopupItems.Debug3D:
+            print("Debug 3D")
+            var on = not popup.is_item_checked(idx)
+            popup.set_item_checked(popup.get_item_index(PopupItems.Debug2D), false)
+            popup.set_item_checked(idx, on)
+            var mode = RuntimeDebugToolsEditorDebuggerPlugin.DebugMode.None
+            
+            if on:
+                mode = RuntimeDebugToolsEditorDebuggerPlugin.DebugMode.Debug3D
+            _inspector.set_debugging(mode)
 
         PopupItems.ShowCollisions:
             var on = not popup.is_item_checked(idx)
