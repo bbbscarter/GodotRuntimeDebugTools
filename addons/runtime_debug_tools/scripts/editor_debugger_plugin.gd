@@ -16,28 +16,24 @@ func selection_changed():
 
     var node_id = node.get_remote_object_id()
 
-    for session in get_sessions():
-        if session.is_active():
-            session.send_message("remote_inspector:editor_select", [node_id])
+    _send_message("remote_inspector:editor_select", [node_id])
     
 func set_debugging(mode : DebugMode):
     var is_active : bool = mode != DebugMode.None
     var is_3d : bool = mode == DebugMode.Debug3D
-    
-    for session in get_sessions():
-        if session.is_active():
-            session.send_message("remote_inspector:debug_enable", [is_active, is_3d])
+    _send_message("remote_inspector:debug_enable", [is_active, is_3d])
     
 func set_render_mode(mode):
-    for session in get_sessions():
-        if session.is_active():
-            session.send_message("remote_inspector:render_mode", [mode])
+    _send_message("remote_inspector:render_mode", [mode])
 
 func set_show_collision_shapes(on: bool):
+    _send_message("remote_inspector:show_collision_shapes", [on])
+
+func _send_message(msg: String, args: Array):
     for session in get_sessions():
         if session.is_active():
-            session.send_message("remote_inspector:show_collision_shapes", [on])
-
+            session.send_message(msg, args)
+    
 func _has_capture(prefix):
     return prefix == "remote_inspector"
 
