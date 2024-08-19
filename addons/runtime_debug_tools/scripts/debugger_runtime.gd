@@ -2,6 +2,8 @@ extends Node
 #class_name RuntimeDebugToolsRuntime
 
 var _is_active := false
+var _is_paused := false
+var _was_paused := false
 
 @onready var _interaction_3d := $Interaction3D as DebugRuntimeInteraction3D
 @onready var _interaction_2d := $Interaction2D as DebugRuntimeInteraction2D
@@ -11,7 +13,7 @@ var _interaction = null
 @onready var _debug_label := $DebugUI/DebugLabel as Label
 var _selected_node : Node = null
 var _showing_collision_shapes := false
-
+var _pause_on_debug := false
 
 func _ready():
     _interaction_2d.on_object_picked.connect(_on_object_picked)
@@ -19,6 +21,7 @@ func _ready():
 
     _set_debug_mode(false, false)
     EngineDebugger.register_message_capture("remote_inspector", _on_editor_select)
+    EngineDebugger.send_message("remote_inspector:connected", [])
 
     # Apparently this doesn't do anything at the moment.
     # RenderingServer.set_debug_generate_wireframes(true)
@@ -33,13 +36,19 @@ func _on_editor_select(msg, args):
         var enabled = args[0]
         var debug_3d = args[1]
         _set_debug_mode(enabled, debug_3d)
+        if enabled and _pause_on_debug:
+            _set_paused(true)
+
     elif msg == "render_mode":
         var mode = args[0]
         get_viewport().debug_draw = mode
     elif msg == "show_collision_shapes":
         var mode = args[0]
         _show_collision_shapes(mode)
-    
+    elif msg == "pause_on_debug":
+        _pause_on_debug = args[0]
+    elif msg == "pause":
+        _set_paused(args[0])
     return true
 
 func _show_collision_shapes(on: bool):
@@ -100,6 +109,8 @@ func _input(event):
         # infer 3D mode if there is an active 3D camera
         var camera = get_viewport().get_camera_3d()
         _set_debug_mode(!_is_active, camera != null)
+        if _is_active and _pause_on_debug:
+            _set_paused(true)
         get_viewport().set_input_as_handled()
 
 func _set_debug_mode(on: bool, debug_3d: bool):
@@ -118,7 +129,24 @@ func _set_debug_mode(on: bool, debug_3d: bool):
             _debug_label.text = "Debug 2D"
 
         _interaction.set_active(on)
+
+    elif _is_paused:
+        _set_paused(false)
+
+    EngineDebugger.send_message("remote_inspector:debug", [on, debug_3d])
         
     _is_active = on
 
-    
+func _set_paused(on: bool):
+    if _is_paused == on:
+        return
+
+    _is_paused = on
+
+    if on:
+        _was_paused = get_tree().paused
+        get_tree().paused = true
+    else:
+        get_tree().paused = _was_paused
+
+    EngineDebugger.send_message("remote_inspector:paused", [on])

@@ -1,4 +1,6 @@
-[gd_scene load_steps=7 format=3 uid="uid://rv05q0begimh"]
+[gd_scene load_steps=8 format=3 uid="uid://rv05q0begimh"]
+
+[ext_resource type="Script" path="res://addons/runtime_debug_tools/examples/example_spin.gd" id="1_1d7j6"]
 
 [sub_resource type="CanvasTexture" id="CanvasTexture_ds8tl"]
 specular_color = Color(0.41024, 0.41024, 0.41024, 1)
@@ -141,6 +143,7 @@ texture = SubResource("NoiseTexture2D_s5rg5")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(0.882036, 0.471181, 0, -0.471181, 0.882036, 0, 0, 0, 1, 0, 0, 0)
 mesh = SubResource("BoxMesh_os2bg")
+script = ExtResource("1_1d7j6")
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(0.980656, 0, 0.195741, 0, 1, 0, -0.195741, 0, 0.980656, 1.09362, 0.487135, 5.76572)

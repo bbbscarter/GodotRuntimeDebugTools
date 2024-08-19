@@ -3,6 +3,12 @@ class_name RuntimeDebugToolsEditorDebuggerPlugin
 
 var found = false
 var node_path = ""
+var _pause_on_debug = false
+
+signal on_client_debug(on: bool, is_3d: bool)
+signal on_client_paused(on: bool)
+signal on_client_connected()
+signal on_client_disconnected()
 
 enum DebugMode { None=0, Debug2D, Debug3D }
 
@@ -29,6 +35,12 @@ func set_render_mode(mode):
 func set_show_collision_shapes(on: bool):
     _send_message("remote_inspector:show_collision_shapes", [on])
 
+func set_pause_on_debug(on: bool):
+    _send_message("remote_inspector:pause_on_debug", [on])
+
+func set_pause(on: bool):
+    _send_message("remote_inspector:pause", [on])
+
 func _send_message(msg: String, args: Array):
     for session in get_sessions():
         if session.is_active():
@@ -50,7 +62,25 @@ func _capture(message, data, session_id):
         if !found:
             print("Node not found. Please check the remote tab is open")
         return true
+    elif message == "remote_inspector:paused":
+        var paused := data[0] as bool
+        on_client_paused.emit(paused)
+        return true
+    elif message == "remote_inspector:connected":
+        on_client_connected.emit()
+        return true
+    elif message == "remote_inspector:debug":
+        var on := data[0] as bool
+        var is_3d := data[1] as bool
+        on_client_debug.emit(on, is_3d)
+        return true
 
+func _on_session_disconnected():
+    on_client_disconnected.emit()
+    
+func _setup_session(session_id):
+    var session = get_session(session_id)
+    session.stopped.connect(_on_session_disconnected)
             
 ## TODO - can we do this with object IDs via SceneDebuggerObject and SceneDebuggerTree?
 func select_object_in_remote_tree(node: Node, id: int):
