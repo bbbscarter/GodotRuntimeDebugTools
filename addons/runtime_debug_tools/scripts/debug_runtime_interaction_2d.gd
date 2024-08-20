@@ -84,13 +84,11 @@ func _do_mouse_movement(event: InputEvent):
     if event is InputEventMouseButton:
         get_viewport().set_input_as_handled()
         match event.button_index:
-            MOUSE_BUTTON_MIDDLE:
+            MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE:
                 if event.pressed:
                     new_mouse_mode = MouseMode.PAN
-                    print("pan")
                 else:
                     new_mouse_mode = MouseMode.NONE
-                    print("stop")
             MOUSE_BUTTON_WHEEL_UP:
                 mouse_zoom *= 1.1
             MOUSE_BUTTON_WHEEL_DOWN:
