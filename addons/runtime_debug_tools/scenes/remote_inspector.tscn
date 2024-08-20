@@ -51,6 +51,7 @@ script = ExtResource("2_2iser")
 visible = false
 
 [node name="Gizmo2D" type="Node2D" parent="Interaction2D"]
+visible = false
 z_index = 4096
 position = Vector2(2.08165e-12, 2.08165e-12)
 scale = Vector2(5, 5)
