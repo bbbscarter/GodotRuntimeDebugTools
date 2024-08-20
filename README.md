@@ -24,6 +24,7 @@ debugging experience.
 - [In-game object picker](https://github.com/user-attachments/assets/037759d3-13fe-4212-a2d9-45193eec0e13)
 - [Editor selections synced with game](https://github.com/user-attachments/assets/c86a7406-1e82-49b5-980d-631db51d4eb2)
 - [Runtime debug visualisations](https://github.com/user-attachments/assets/05ecf725-8006-4ee6-b63c-71511c40c4dc)
+- [2D tools](https://github.com/user-attachments/assets/20adb588-48bf-4e88-81e2-43b729a4e6e5)
 
 # Installation and Usage
 - Download from the Godot Asset Library.
@@ -36,7 +37,7 @@ debugging experience.
   has the benefit of being accurate and working with all rendered assets without
   requiring any scene modifications; however triangle picking may be slow in
   large/complex scenes.
-- 2D object picking is currently limited to sprites and canvas items.
+- 2D object picking is currently limited to sprites and UI controls.
 - Some features, such as selecting nodes in the editor scene tree, and toggling
   collision meshes, rely on undocumented Godot features.
 - This is just a proof of concept. The hope is that some of these features might
