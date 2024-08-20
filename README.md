@@ -1,16 +1,19 @@
 # Runtime Debug Tools for Godot
-A proof-of-concept Godot addon that attempts to improve the runtime debugging
-experience.
+A proof-of-concept Godot addon that attempts to extend and improve the runtime
+debugging experience.
 
 # Features
-- Debug Camera. A simple in game debug camera for navigating around the live
+- Works with both 2D and 3D scenes.
+- Debug camera. A simple in-game debug camera for navigating around the live
   scene. This somewhat mimics the in-editor camera experience.
 - In-game object picker. While using the debug camera, clicking the mouse will
-  select the object under the mouse. This will also select the object in the
-  Godot editor remote tree inspector.
-- In-game object selection. Selecting a node in the Godot Editor, or using the
-  in-game object picker, will visually select it in the Debug Camera view, with
-  a visible widget.
+  select the object under the mouse, highlighting it with a visible gizmo in the
+  runtime and selecting the object in the Godot Editor remote tree inspector.
+- Editor object picker synchronised with the running application. Selecting a node in the
+  Godot Editor, will visually select it in the runtime debug view with a visible gizmo.
+- Optionally, turning on 2D or 3D Debug mode pauses the running game. This makes
+  debugging easier, and also prevents running game code from interfering with
+  debug controls.
 - Runtime toggling of debug features. The remote inspector popup menu exposes
   various debug visualisation options. Including:
   - Wireframe mode.
@@ -26,13 +29,14 @@ experience.
 - Download from the Godot Asset Library.
 - Import the plugin into your Godot project.
 - Enable the plugin in your project settings.
-- When your game is running, click on the RDT button in the toolbar.
+- When the game is running click on the RDT button in the toolbar and select '2D' or '3D' debugging.
  
 # Notes
-- In-game object uses physics meshes and rendered MeshInstances. This has the
-  benefit of being accurate and not requiring any changes to assets - but
-  triangle picking may be slow in large/complex scenes.
-- Currently only supports 3D scenes, but should be easily extended to 2D scenes.
+- 3D object picking uses physics meshes, as well as rendered MeshInstances. This
+  has the benefit of being accurate and working with all rendered assets without
+  requiring any scene modifications; however triangle picking may be slow in
+  large/complex scenes.
+- 2D object picking is currently limited to sprites and canvas items.
 - Some features, such as selecting nodes in the editor scene tree, and toggling
   collision meshes, rely on undocumented Godot features.
 - This is just a proof of concept. The hope is that some of these features might
