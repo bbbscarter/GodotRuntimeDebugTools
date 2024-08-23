@@ -250,7 +250,7 @@ func _get_mesh_ray_intersection(
     var local_ray_dir = local_ray_end - local_ray_start
 
     var aabb := mesh.get_aabb()
-    var aabb_intersect := aabb.intersects_ray(local_ray_start, local_ray_dir)
+    var aabb_intersect = aabb.intersects_ray(local_ray_start, local_ray_dir)
     if aabb_intersect == null:
         return null
  
@@ -267,7 +267,7 @@ func _get_mesh_ray_intersection(
 
     _full_mesh_check_count += 1
     for idx in range(0, num_faces, 3):
-        var tri_intersect := Geometry3D.ray_intersects_triangle(
+        var tri_intersect = Geometry3D.ray_intersects_triangle(
             local_ray_start, local_ray_dir, faces[idx], faces[idx+1], faces[idx+2])
         if tri_intersect:
             var tri_intersect_dist: float = (tri_intersect - local_ray_start).length_squared()
@@ -280,4 +280,3 @@ func _get_mesh_ray_intersection(
         return transform * found_best_intersection
                 
     return null
-

@@ -65,7 +65,7 @@ func _ready():
     _debug_camera.enabled = false
     _ignore_nodes(get_parent())
     
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
     if not _is_active:
         return
         
@@ -198,7 +198,6 @@ func _find_nearest_node_instersecting_point_2d(point: Vector2) -> Node2D:
             # or CanvasLayers
             var control_node := node as Control
             if control_node.visible and control_node.z_index >= best_z_index:
-                var rect := control_node.get_global_rect()
                 if control_node.get_global_rect().has_point(point):
                     best_z_index = control_node.z_index
                     nearest_node = node

@@ -11,7 +11,6 @@ var _interaction = null
 
 @onready var _debug_ui := $DebugUI as Node
 @onready var _debug_label := $DebugUI/DebugLabel as Label
-var _selected_node : Node = null
 var _showing_collision_shapes := false
 var _pause_on_debug := false
 

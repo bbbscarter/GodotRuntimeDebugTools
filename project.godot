@@ -19,6 +19,10 @@ config/icon="res://icon.svg"
 
 RuntimeDebugTools="*res://addons/runtime_debug_tools/scenes/remote_inspector.tscn"
 
+[debug]
+
+gdscript/warnings/exclude_addons=false
+
 [display]
 
 window/size/initial_position_type=3
