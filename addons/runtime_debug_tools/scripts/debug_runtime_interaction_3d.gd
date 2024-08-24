@@ -44,6 +44,7 @@ func set_active(on):
     var active_cam := get_viewport().get_camera_3d()
 
     if on:
+        add_child(_debug_camera)
         _debug_camera.visible = on 
     
         if not _is_active:
@@ -61,6 +62,7 @@ func set_active(on):
         if _previous_camera:
             _previous_camera.make_current()
             _previous_camera = null
+        remove_child(_debug_camera)
         
     _is_active = on
     _update_gizmo_pos()
@@ -71,6 +73,7 @@ func set_active(on):
 func _ready():
     _ignore_nodes(get_parent())
     _debug_camera.current = false
+    remove_child(_debug_camera)
 
 func _input(event):
     if not _is_active:
