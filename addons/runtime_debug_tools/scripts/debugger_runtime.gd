@@ -27,10 +27,11 @@ func _ready():
 
 func _on_editor_select(msg, args):
     if msg == "editor_select":
-        var node_to_select = instance_from_id(args[0]) as Node
-        # print("Asked to select node: %s" %args[0])
-        _select_node(node_to_select)
-        # print("Selected node: %s" %_selected_node)
+        if _is_active:
+            var node_to_select = instance_from_id(args[0]) as Node
+            # print("Asked to select node: %s" %args[0])
+            _select_node(node_to_select)
+            # print("Selected node: %s" %_selected_node)
     elif msg == "debug_enable":
         var enabled = args[0]
         var debug_3d = args[1]
