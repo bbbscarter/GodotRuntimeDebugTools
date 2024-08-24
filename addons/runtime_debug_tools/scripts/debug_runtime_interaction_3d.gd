@@ -70,6 +70,7 @@ func set_active(on):
 #----------------------------------------------------------------------------
 func _ready():
     _ignore_nodes(get_parent())
+    _debug_camera.current = false
 
 func _input(event):
     if not _is_active:
