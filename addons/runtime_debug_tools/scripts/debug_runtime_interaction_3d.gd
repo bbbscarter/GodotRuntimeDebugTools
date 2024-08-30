@@ -8,6 +8,9 @@ signal on_object_picked(node)
 var _selected_node : Node
 var _is_active = false
 var _previous_camera : Camera3D
+var _initialMouseMode : Input.MouseMode
+var _is_game_process_in_focus : bool
+var _set_initial_mouse_mode : bool
 var _use_only_physics_for_picking = false
 
 var _picker_ignore_nodes := {}
@@ -40,6 +43,15 @@ func select_node(node):
     _gizmo.visible = true
     _update_gizmo_pos()
 
+
+func _notification(what: int):
+    match what:
+        NOTIFICATION_APPLICATION_FOCUS_IN:
+            _is_game_process_in_focus = true;
+        NOTIFICATION_APPLICATION_FOCUS_OUT:
+            _is_game_process_in_focus = false;
+
+
 func set_active(on):
     var active_cam := get_viewport().get_camera_3d()
 
@@ -58,12 +70,15 @@ func set_active(on):
         
         _debug_camera.make_current()
 
+        _initialMouseMode = Input.get_mouse_mode()
     else:
         if _previous_camera:
             _previous_camera.make_current()
             _previous_camera = null
         remove_child(_debug_camera)
-        
+
+        _set_initial_mouse_mode = true;
+
     _is_active = on
     _update_gizmo_pos()
 
@@ -84,6 +99,10 @@ func _input(event):
         _pick_object()
 
 func _process(delta: float) -> void:
+    if _is_game_process_in_focus and _set_initial_mouse_mode:
+        Input.mouse_mode = _initialMouseMode
+        _set_initial_mouse_mode = false;
+
     if not _is_active:
         return
 
