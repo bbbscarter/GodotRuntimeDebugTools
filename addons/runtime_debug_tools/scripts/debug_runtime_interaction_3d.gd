@@ -9,7 +9,6 @@ var _selected_node : Node
 var _is_active = false
 var _previous_camera : Camera3D
 var _previous_mouse_mode : Input.MouseMode
-var _is_game_process_in_focus : bool
 var _restore_previous_mouse_mode : bool
 var _use_only_physics_for_picking = false
 
@@ -42,15 +41,6 @@ func select_node(node):
         return
     _gizmo.visible = true
     _update_gizmo_pos()
-
-
-func _notification(what: int):
-    match what:
-        NOTIFICATION_APPLICATION_FOCUS_IN:
-            _is_game_process_in_focus = true;
-        NOTIFICATION_APPLICATION_FOCUS_OUT:
-            _is_game_process_in_focus = false;
-
 
 func set_active(on):
     var active_cam := get_viewport().get_camera_3d()

@@ -10,7 +10,6 @@ signal on_object_picked(node)
 var _is_active = false
 var _previous_camera : Camera2D
 var _previous_mouse_mode : Input.MouseMode
-var _is_game_process_in_focus: bool
 var _restore_previous_mouse_mode : bool
 var _use_only_physics_for_picking = false
 
@@ -54,15 +53,6 @@ func set_active(on):
 
     _is_active = on
     _update_gizmo()
-
-
-func _notification(what: int):
-    match what:
-        NOTIFICATION_APPLICATION_FOCUS_IN:
-            _is_game_process_in_focus = true;
-        NOTIFICATION_APPLICATION_FOCUS_OUT:
-            _is_game_process_in_focus = false;
-
 
 func select_node(node):
     if node == _selected_node:
