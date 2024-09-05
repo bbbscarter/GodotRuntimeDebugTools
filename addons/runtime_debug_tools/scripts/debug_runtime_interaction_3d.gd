@@ -8,6 +8,8 @@ signal on_object_picked(node)
 var _selected_node : Node
 var _is_active = false
 var _previous_camera : Camera3D
+var _previous_mouse_mode : Input.MouseMode
+var _restore_previous_mouse_mode : bool
 var _use_only_physics_for_picking = false
 
 var _picker_ignore_nodes := {}
@@ -58,12 +60,15 @@ func set_active(on):
         
         _debug_camera.make_current()
 
+        _previous_mouse_mode = Input.get_mouse_mode()
     else:
         if _previous_camera:
             _previous_camera.make_current()
             _previous_camera = null
         remove_child(_debug_camera)
-        
+
+        _restore_previous_mouse_mode = true;
+
     _is_active = on
     _update_gizmo_pos()
 
@@ -84,6 +89,11 @@ func _input(event):
         _pick_object()
 
 func _process(delta: float) -> void:
+
+    if get_window().has_focus() and _restore_previous_mouse_mode:
+        Input.mouse_mode = _previous_mouse_mode
+        _restore_previous_mouse_mode = false;
+
     if not _is_active:
         return
 
