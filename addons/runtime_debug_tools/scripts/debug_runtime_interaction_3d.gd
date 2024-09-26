@@ -11,6 +11,7 @@ var _previous_camera : Camera3D
 var _previous_mouse_mode : Input.MouseMode
 var _restore_previous_mouse_mode : bool
 var _use_only_physics_for_picking = false
+var _click_queued := false
 
 var _picker_ignore_nodes := {}
 var _camera_pos_set := false
@@ -86,6 +87,11 @@ func _input(event):
     
     if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
         get_viewport().set_input_as_handled()
+        _click_queued = true
+
+func _physics_process(_delta: float) -> void:
+    if _click_queued:
+        _click_queued = false
         _pick_object()
 
 func _process(delta: float) -> void:
