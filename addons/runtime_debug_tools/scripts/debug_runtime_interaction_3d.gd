@@ -24,6 +24,7 @@ var _mouse_zoom := 0
 @export_range(0, 10, 0.01) var sensitivity : float = 3
 @export_range(0, 1000, 0.1) var default_velocity : float = 5
 @export_range(0, 10, 0.01) var speed_scale : float = 1.17
+@export_range(0.1, 0.9) var slow_down_multiplier : float = 0.3
 @export_range(1, 100, 0.1) var boost_speed_multiplier : float = 3.0
 @export var max_speed : float = 1000
 @export var min_speed : float = 0.2
@@ -110,6 +111,9 @@ func _process(delta: float) -> void:
         ).normalized()
 
     var step = delta
+    if Input.is_physical_key_pressed(KEY_ALT): # slow movement
+        step = delta * slow_down_multiplier
+
     if Input.is_physical_key_pressed(KEY_SHIFT): # boost
         step = delta * boost_speed_multiplier
 
