@@ -24,6 +24,7 @@ func _exit_tree():
     if _editor_plugin != null:
         EditorInterface.get_inspector().edited_object_changed.disconnect(_editor_plugin.selection_changed)
         remove_debugger_plugin(_editor_plugin)
+        
     if ProjectSettings.has_setting("autoload/RuntimeDebugTools"):
         remove_autoload_singleton("RuntimeDebugTools")
 
@@ -33,18 +34,15 @@ func _exit_tree():
 
 func add_project_keybinding(path_name : String, input_key : String):
     var full_path = SETTINGS_PATH + path_name
-    if not ProjectSettings.has_setting(full_path):
-        print("Adding keybinding for " + full_path)
-        ProjectSettings.set_initial_value(full_path, input_key)
-        ProjectSettings.set_setting(full_path, input_key)
-        var property_info = {
-            "name": full_path,
-            "type": TYPE_STRING,
-            }
-        ProjectSettings.add_property_info(property_info)
+    ProjectSettings.set_setting(full_path, input_key)
+    ProjectSettings.set_initial_value(full_path, input_key)
+    var property_info = {
+        "name": full_path,
+        "type": TYPE_STRING,
+        }
+    ProjectSettings.add_property_info(property_info)
 
 func remove_project_keybinding(path_name : String):
     var full_path = SETTINGS_PATH + path_name
-    if ProjectSettings.has_setting(full_path):
-        ProjectSettings.set_setting(full_path, null)
+    ProjectSettings.set_setting(full_path, null)
     
