@@ -48,7 +48,6 @@ func _on_popup_item_pressed(id):
         PopupItems.Debug2D:
             var on = not popup.is_item_checked(idx)
             var mode = RuntimeDebugToolsEditorDebuggerPlugin.DebugMode.None
-            
             if on:
                 mode = RuntimeDebugToolsEditorDebuggerPlugin.DebugMode.Debug2D
             _inspector.set_debugging(mode)
@@ -56,7 +55,6 @@ func _on_popup_item_pressed(id):
         PopupItems.Debug3D:
             var on = not popup.is_item_checked(idx)
             var mode = RuntimeDebugToolsEditorDebuggerPlugin.DebugMode.None
-            
             if on:
                 mode = RuntimeDebugToolsEditorDebuggerPlugin.DebugMode.Debug3D
             _inspector.set_debugging(mode)
@@ -99,7 +97,8 @@ func set_remote_inspector(inspector):
     _inspector.on_client_connected.connect(_client_connected)
     _inspector.on_client_disconnected.connect(_client_disconnected)
     _inspector.on_client_paused.connect(_client_paused)
-    _inspector.on_client_debug.connect(_client_debug)
+    _inspector.on_client_debug_activate.connect(_client_debug_activate)
+    _inspector.on_client_debug_deactivate.connect(_client_debug_deactivate)
     
 func _client_connected():
     _reset_ui(true)
@@ -115,23 +114,19 @@ func _client_paused(on: bool):
     var popup := get_popup()
     popup.set_item_checked(popup.get_item_index(PopupItems.Paused), on)
     
-func _client_debug(on: bool, is_3d: bool):
+func _client_debug_activate(is_3d: bool):
     var popup := get_popup()
-    if !on:
-        popup.set_item_checked(popup.get_item_index(PopupItems.Debug2D), false)
-        popup.set_item_checked(popup.get_item_index(PopupItems.Debug3D), false)
-        popup.set_item_disabled(popup.get_item_index(PopupItems.Paused), true)
-        return
-        
+
     popup.set_item_disabled(popup.get_item_index(PopupItems.Paused), false)
 
-    if is_3d:
-        popup.set_item_checked(popup.get_item_index(PopupItems.Debug2D), false)
-        popup.set_item_checked(popup.get_item_index(PopupItems.Debug3D), true)
-    else:
-        popup.set_item_checked(popup.get_item_index(PopupItems.Debug2D), true)
-        popup.set_item_checked(popup.get_item_index(PopupItems.Debug3D), false)
+    popup.set_item_checked(popup.get_item_index(PopupItems.Debug2D), !is_3d)
+    popup.set_item_checked(popup.get_item_index(PopupItems.Debug3D), is_3d)
         
+func _client_debug_deactivate():
+    var popup := get_popup()
+    popup.set_item_checked(popup.get_item_index(PopupItems.Debug2D), false)
+    popup.set_item_checked(popup.get_item_index(PopupItems.Debug3D), false)
+    popup.set_item_disabled(popup.get_item_index(PopupItems.Paused), true)
 
 func _reset_ui(client_running: bool):
     var popup := get_popup()

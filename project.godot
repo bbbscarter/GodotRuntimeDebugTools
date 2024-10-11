@@ -8,6 +8,11 @@
 
 config_version=5
 
+[addons]
+
+RuntimeDebugTools/DebugToggle3D="F12"
+RuntimeDebugTools/DebugToggle2D="F11"
+
 [application]
 
 config/name="Runtime Debug Tools"

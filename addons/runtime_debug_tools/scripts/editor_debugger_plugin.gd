@@ -5,7 +5,8 @@ var found = false
 var node_path = ""
 var _pause_on_debug = false
 
-signal on_client_debug(on: bool, is_3d: bool)
+signal on_client_debug_activate(is_3d: bool)
+signal on_client_debug_deactivate()
 signal on_client_paused(on: bool)
 signal on_client_connected()
 signal on_client_disconnected()
@@ -27,7 +28,10 @@ func selection_changed():
 func set_debugging(mode : DebugMode):
     var is_active : bool = mode != DebugMode.None
     var is_3d : bool = mode == DebugMode.Debug3D
-    _send_message("remote_inspector:debug_enable", [is_active, is_3d])
+    if is_active:
+        _send_message("remote_inspector:debug_activate", [is_3d])
+    else:
+        _send_message("remote_inspector:debug_deactivate", [])
     
 func set_render_mode(mode):
     _send_message("remote_inspector:render_mode", [mode])
@@ -49,7 +53,7 @@ func _send_message(msg: String, args: Array):
 func _has_capture(prefix):
     return prefix == "remote_inspector"
 
-func _capture(message, data, session_id):
+func _capture(message, data, _session_id):
     if message == "remote_inspector:select_id":
         found = false
         var node_id = data[0]
@@ -63,16 +67,22 @@ func _capture(message, data, session_id):
             print("Node not found. Please check the remote tab is open")
         return true
     elif message == "remote_inspector:paused":
+        # print("Editor: Pause received")
         var paused := data[0] as bool
         on_client_paused.emit(paused)
         return true
     elif message == "remote_inspector:connected":
+        # print("Editor: Connect received")
         on_client_connected.emit()
         return true
-    elif message == "remote_inspector:debug":
-        var on := data[0] as bool
-        var is_3d := data[1] as bool
-        on_client_debug.emit(on, is_3d)
+    elif message == "remote_inspector:debug_activated":
+        # print("Editor: Activate received")
+        var is_3d := data[0] as bool
+        on_client_debug_activate.emit(is_3d)
+        return true
+    elif message == "remote_inspector:debug_deactivated":
+        # print("Editor: Deactivate received")
+        on_client_debug_deactivate.emit()
         return true
 
 func _on_session_disconnected():

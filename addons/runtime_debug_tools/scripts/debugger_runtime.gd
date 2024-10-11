@@ -13,32 +13,50 @@ var _interaction = null
 @onready var _debug_label := $DebugUI/DebugLabel as Label
 var _showing_collision_shapes := false
 var _pause_on_debug := false
+var _debug_key_3d := KEY_F12
+var _debug_key_2d := KEY_F11
 
 func _ready():
     _interaction_2d.on_object_picked.connect(_on_object_picked)
     _interaction_3d.on_object_picked.connect(_on_object_picked)
 
-    _set_debug_mode(false, false)
-    EngineDebugger.register_message_capture("remote_inspector", _on_editor_select)
+    _debug_ui.visible = false
+    _interaction = null
+    _is_active = false
+
+    _deactivate_debug_mode()
+    EngineDebugger.register_message_capture("remote_inspector", _on_editor_message)
     EngineDebugger.send_message("remote_inspector:connected", [])
+
+    var key_2d = ProjectSettings.get_setting("addons/RuntimeDebugTools/DebugToggle2D")
+    if key_2d and OS.find_keycode_from_string(key_2d):
+        print("Binding 2D debug to: " + key_2d)
+        _debug_key_2d = OS.find_keycode_from_string(key_2d)
+
+    var key_3d = ProjectSettings.get_setting("addons/RuntimeDebugTools/DebugToggle3D")
+    if key_3d and OS.find_keycode_from_string(key_3d):
+        print("Binding 3D debug to: " + key_3d)
+        _debug_key_3d = OS.find_keycode_from_string(key_3d)
 
     # Apparently this doesn't do anything at the moment.
     # RenderingServer.set_debug_generate_wireframes(true)
 
-func _on_editor_select(msg, args):
+func _on_editor_message(msg, args):
     if msg == "editor_select":
         if _is_active:
             var node_to_select = instance_from_id(args[0]) as Node
             # print("Asked to select node: %s" %args[0])
             _select_node(node_to_select)
             # print("Selected node: %s" %_selected_node)
-    elif msg == "debug_enable":
-        var enabled = args[0]
-        var debug_3d = args[1]
-        _set_debug_mode(enabled, debug_3d)
-        if enabled and _pause_on_debug:
-            _set_paused(true)
+    elif msg == "debug_activate":
+        if _is_active:
+            _deactivate_debug_mode()
+        var debug_3d = args[0]
+        _activate_debug_mode(debug_3d)
 
+    elif msg == "debug_deactivate":
+        if _is_active:
+            _deactivate_debug_mode()
     elif msg == "render_mode":
         var mode = args[0]
         get_viewport().debug_draw = mode
@@ -102,40 +120,58 @@ func _on_object_picked(picked_node):
         _select_node(null)
     
 func _input(event):
-    var key_event = event as InputEventKey
+    var key_event := event as InputEventKey
 
-    # Toggle debugging if F12 is pressed
-    if key_event and key_event.pressed and key_event.keycode == KEY_F12:
-        # infer 3D mode if there is an active 3D camera
-        var camera = get_viewport().get_camera_3d()
-        _set_debug_mode(!_is_active, camera != null)
-        if _is_active and _pause_on_debug:
-            _set_paused(true)
-        get_viewport().set_input_as_handled()
+    # Toggle debugging if a key is pressed
+    if key_event and key_event.pressed:
+        if key_event.keycode == _debug_key_3d or key_event.keycode == _debug_key_2d:
+            get_viewport().set_input_as_handled()
+            # If debugging is active, turn it off regardless of the key pressed.
+            if _is_active:
+                _deactivate_debug_mode()
+                return
 
-func _set_debug_mode(on: bool, debug_3d: bool):
-    _debug_ui.visible = on 
+            var is_3d := key_event.keycode == _debug_key_3d
+            # if is_3d:
+            #     is_3d = get_viewport().get_camera_3d() != null
+
+            _activate_debug_mode(is_3d)
+
+func _activate_debug_mode(debug_3d: bool):
+    _debug_ui.visible = true
 
     if _interaction:
         _interaction.set_active(false)
         _interaction = null
     
-    if on:
-        if debug_3d:
-            _interaction = _interaction_3d
-            _debug_label.text = "Debug 3D"
-        else:
-            _interaction = _interaction_2d
-            _debug_label.text = "Debug 2D"
+    if debug_3d:
+        _interaction = _interaction_3d
+        _debug_label.text = "Debug 3D"
+    else:
+        _interaction = _interaction_2d
+        _debug_label.text = "Debug 2D"
 
-        _interaction.set_active(on)
+    _interaction.set_active(true)
+    if _pause_on_debug:
+        _set_paused(true)
 
-    elif _is_paused:
+    EngineDebugger.send_message("remote_inspector:debug_activated", [debug_3d])
+        
+    _is_active = true
+
+func _deactivate_debug_mode():
+    _debug_ui.visible = false
+
+    if _interaction:
+        _interaction.set_active(false)
+        _interaction = null
+    
+    if _is_paused:
         _set_paused(false)
 
-    EngineDebugger.send_message("remote_inspector:debug", [on, debug_3d])
+    EngineDebugger.send_message("remote_inspector:debug_deactivated", [])
         
-    _is_active = on
+    _is_active = false
 
 func _set_paused(on: bool):
     if _is_paused == on:
